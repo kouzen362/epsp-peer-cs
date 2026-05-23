@@ -534,7 +534,8 @@ namespace WpfClient
                         IsFollowUp = serial > 1,
                         ReceivedAt = DateTime.Parse(eew.Time),
                         Hypocenter = EEWConverter.GetHypocenterCode(eew.Earthquake?.Hypocenter?.ReduceName),
-                        Areas = (eew.Areas ?? Array.Empty<EEWArea>()).Select(e => e.Pref).Distinct().Select(e => EEWConverter.GetAreaCode(e)).ToArray(),
+                        // 電文上は「奄美」と記載されるが、一定の表記揺れを吸収したうえで表示上は「奄美群島」とする。
+                        Areas = (eew.Areas ?? Array.Empty<EEWArea>()).Select(e => e.Pref).Distinct().Select(e => EEWConverter.GetAreaCode(e.Replace("奄美(群島)","奄美").Replace("奄美群島","奄美").Replace("奄美","奄美群島"))).ToArray(),
                     };
                     AddHistory(eventArgs);
                 }
